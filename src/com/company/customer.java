@@ -14,6 +14,8 @@ public class customer {
     private final int ssn;
     private boolean employ;
     private boolean mmbr;
+    private FileWriter fw;
+    private String date;
 
 
     public customer(String name, int weight, int ssn, boolean employ, boolean mmbr )throws IOException{
@@ -22,9 +24,10 @@ public class customer {
         this.ssn=ssn;
         this.employ=employ;
         this.mmbr=mmbr;
-        FileWriter fw=new FileWriter("customer"+num);
+         fw=new FileWriter("customer"+num);
         me=num;
         num++;
+
 
     }
     public void hire(customer c){
@@ -38,7 +41,21 @@ public class customer {
         c.weight=n;
     }
     public void offer(customer c){
-        if(1==1);
+        if(status(c)==2&&!c.mmbr){
+            System.out.println(would you like to );
+        }
+        else if(status(c)==0){
+            
+        }
+
+    }
+    public int status(customer c){
+        int i=0;
+        if (c.employ)
+            i=2;
+        else if (c.mmbr)
+            i=1;
+       return i;
     }
     public void verify (customer c, int control){}
 
