@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -18,7 +19,7 @@ public class member  {
         new member ( name , paid, weight,  ssn,  cc,  pin, false);
     }
     public member (String name ,boolean paid,int weight, int ssn,int cc, int pin,boolean employ)throws IOException{
-        Scanner s=new Scanner("memberList");
+        Scanner s=new Scanner(new File("memberList"));
         int me=0;
         if (s.hasNextLine()){
 
@@ -43,8 +44,39 @@ public class member  {
 
 
     }
-    public static int find (String name){
-        Scanner sc=new Scanner ("memberList");
+    public static void pay(int place )throws IOException{
+
+        Scanner sc=new Scanner(new File("member"+place));
+        sc.nextLine();
+        String s=sc.nextLine();
+        int pin=Integer.parseInt(s.substring(s.lastIndexOf(' ')+1));
+        for (int i=0;i<4;i++)
+            sc.nextLine();
+        s=sc.nextLine();
+        int e=Integer.parseInt(s.substring(s.length()-1));
+        sc.close();
+        sc=new Scanner(new File("Retail"));
+
+        sc.nextLine();
+        s=sc.nextLine();
+        sc.close();
+        sc=new Scanner(s);
+        sc.useDelimiter(",");
+        sc.next();
+
+
+        if(e==1) {
+            sc.next();
+            sc.next();
+        }
+        double rate=Double.parseDouble(sc.next());
+        sc.close();
+        System.out.println("You have been charged $"+rate+"for your membership.");
+
+
+    }
+    public static int find (String name) throws IOException{
+        Scanner sc=new Scanner (new File("memberList"));
         int i=-1;
         while (sc.hasNextLine() ){
             String s=sc.nextLine();
@@ -57,24 +89,36 @@ public class member  {
         return i;
     }
 
-    public static void visit(int time,String name) throws IOException{
+    public static void visit(int time,String name, boolean b) throws IOException{
         int i=0;
-        if (verification(name)) {
-            Scanner sc=new Scanner("member" + find(name));
+        if (b) {
+            Scanner sc=new Scanner(new File("member" + find(name)));
+            boolean x=false;
+            while (sc.hasNextLine()){
+                String s=sc.nextLine();
+                x=x||s.trim().equals(("visits"));
+
+                if (x)
+                    i++;
+            }
+            sc.close();
             FileWriter fw = new FileWriter("member" + find(name),true);
             BufferedWriter bw=new BufferedWriter(fw);
+            bw.write(i+"- "+time);
+            bw.close();
+            fw.close();
 
         }
 
     }
-   public  static boolean verification(String name){
+   public  static boolean verification(String name) throws IOException{
        int line =find(name);
        boolean b = false;
        if (line ==-1){
            System.out.println("You do not appear to belong to our gym yet.");
        }
        else {
-           Scanner sc = new Scanner("member" + line);
+           Scanner sc = new Scanner(new File("member" + line));
            sc.nextLine();
            String l = sc.nextLine();
            sc.close();
